@@ -60,5 +60,5 @@ def main():
     st.success(f"**Customer needs to pay:** ₹{final_price}")
     st.info(f"**Apply coupon code with {discount_percentage}% discount**")
 
-if __name__ == \"__main__\":
+if __name__ == "__main__":
     main()
