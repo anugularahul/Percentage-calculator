@@ -8,17 +8,17 @@ def calculate_upgrade_price(current_plan_price, target_plan_price, extra_discoun
 
 def main():
     st.set_page_config(page_title="Upgrade Price Calculator", layout="centered")
-    st.title("🚀 Assisted Plan Upgrade Calculator")
+    st.title("Assisted Plan Upgrade Calculator")
+    st.write("Use this tool to calculate upgrade pricing and applicable discounts.")
 
-    with st.expander("🛠️ Edit Plan Prices", expanded=False):
-        st.markdown("Edit selling prices of each plan below:")
+    with st.expander("Edit Plan Prices", expanded=False):
         col1, col2 = st.columns(2)
         with col1:
-            basic_price = st.number_input("Basic", value=2359.82)
-            premium_price = st.number_input("Premium", value=5356.82)
+            basic_price = st.number_input("Assisted Filing Basic Plan Price", value=2359.82)
+            premium_price = st.number_input("Assisted Filing Premium Plan Price", value=5356.82)
         with col2:
-            elite_price = st.number_input("Elite", value=6749.82)
-            luxury_price = st.number_input("Luxury", value=17699.53)
+            elite_price = st.number_input("Assisted Filing Elite Plan Price", value=6749.82)
+            luxury_price = st.number_input("Assisted Filing Luxury Plan Price", value=17699.53)
 
     plan_prices = {
         "Basic": basic_price,
@@ -27,19 +27,19 @@ def main():
         "Luxury": luxury_price,
     }
 
-    st.markdown("### 📋 Select Plans")
+    st.subheader("Plan Selection")
     col1, col2 = st.columns(2)
     with col1:
-        current_plan = st.selectbox("Current Plan", list(plan_prices.keys())[:-1])
+        current_plan = st.selectbox("Select Current Plan", list(plan_prices.keys())[:-1])
     with col2:
-        target_plan = st.selectbox("Target Plan", list(plan_prices.keys())[1:])
+        target_plan = st.selectbox("Select Target Plan", list(plan_prices.keys())[1:])
 
     if plan_prices[current_plan] >= plan_prices[target_plan]:
         st.error("Target plan must be of higher value than current plan.")
         return
 
-    st.markdown("### 💰 Customer Offer & Discount")
-    customer_offer = st.number_input("How much is customer ready to pay?", value=0.0)
+    st.subheader("Customer Offer")
+    customer_offer = st.number_input("Enter Amount Customer is Willing to Pay", value=0.0)
 
     raw_difference = plan_prices[target_plan] - plan_prices[current_plan]
     calculated_extra_discount = raw_difference - customer_offer if customer_offer > 0 else 0
@@ -48,18 +48,17 @@ def main():
     with col1:
         st.metric("Price Difference", f"₹{raw_difference:.2f}")
     with col2:
-        st.metric("Auto Discount", f"₹{calculated_extra_discount:.2f}")
+        st.metric("Calculated Discount", f"₹{calculated_extra_discount:.2f}")
 
-    extra_discount = st.number_input("🔧 Adjust Discount (if needed)", value=calculated_extra_discount)
+    extra_discount = st.number_input("Adjust Discount (Optional)", value=calculated_extra_discount)
 
     final_price, discount_percentage = calculate_upgrade_price(
         plan_prices[current_plan], plan_prices[target_plan], extra_discount
     )
 
-    st.markdown("---")
-    st.markdown("### 📊 Final Summary")
-    st.success(f"**Customer needs to pay:** ₹{final_price}")
-    st.info(f"**Apply coupon code with {discount_percentage}% discount**")
+    st.subheader("Summary")
+    st.write(f"**Amount to be Paid by Customer:** ₹{final_price}")
+    st.write(f"**Suggested Coupon Discount:** {discount_percentage}%")
 
 if __name__ == "__main__":
     main()
