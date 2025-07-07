@@ -19,8 +19,6 @@ def main():
     current_plan = st.selectbox("Current Plan", ["Basic", "Premium", "Elite"])
     target_plan = st.selectbox("Target Plan", ["Premium", "Elite", "Luxury"])
 
-    extra_discount = st.number_input("Additional Discount (₹)", value=0.0)
-
     plan_prices = {
         "Basic": basic_price,
         "Premium": premium_price,
@@ -32,11 +30,24 @@ def main():
         st.error("Target plan must be of higher value than current plan.")
         return
 
+    st.subheader("Customer Offer Handling")
+    customer_offer = st.number_input("Amount Customer is Ready to Pay (₹)", value=0.0)
+
+    # Calculate required discount if customer_offer is provided
+    raw_difference = plan_prices[target_plan] - plan_prices[current_plan]
+    calculated_extra_discount = raw_difference - customer_offer
+
+    # Show auto-updated additional discount
+    st.write(f"Calculated Additional Discount: ₹{max(calculated_extra_discount, 0):.2f}")
+
+    # Allow user to manually adjust additional discount (if needed)
+    extra_discount = st.number_input("Override Additional Discount (₹)", value=max(calculated_extra_discount, 0.0))
+
     final_price, discount_percentage = calculate_upgrade_price(
         plan_prices[current_plan], plan_prices[target_plan], extra_discount
     )
 
-    st.success(f"\nAmount to be paid by customer: ₹{final_price}")
+    st.success(f"Amount to be paid by customer: ₹{final_price}")
     st.info(f"Generate coupon code with discount: {discount_percentage}%")
 
 if __name__ == "__main__":
