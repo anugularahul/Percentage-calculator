@@ -40,16 +40,17 @@ def main():
 
     st.markdown("### 💰 Customer Offer & Discount")
     customer_offer = st.number_input("How much is customer ready to pay?", value=0.0)
+
     raw_difference = plan_prices[target_plan] - plan_prices[current_plan]
-    calculated_extra_discount = raw_difference - customer_offer
+    calculated_extra_discount = raw_difference - customer_offer if customer_offer > 0 else 0
 
     col1, col2 = st.columns(2)
     with col1:
         st.metric("Price Difference", f"₹{raw_difference:.2f}")
     with col2:
-        st.metric("Auto Discount", f"₹{max(calculated_extra_discount, 0):.2f}")
+        st.metric("Auto Discount", f"₹{calculated_extra_discount:.2f}")
 
-    extra_discount = st.number_input("🔧 Adjust Discount (if needed)", value=max(calculated_extra_discount, 0.0))
+    extra_discount = st.number_input("🔧 Adjust Discount (if needed)", value=calculated_extra_discount)
 
     final_price, discount_percentage = calculate_upgrade_price(
         plan_prices[current_plan], plan_prices[target_plan], extra_discount
