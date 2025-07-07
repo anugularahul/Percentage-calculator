@@ -27,7 +27,7 @@ def main():
         "Luxury": luxury_price,
     }
 
-    st.subheader("Plan Selection")
+   
     col1, col2 = st.columns(2)
     with col1:
         current_plan = st.selectbox("Select Current Plan", list(plan_prices.keys())[:-1])
